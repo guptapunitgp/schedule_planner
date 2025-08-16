@@ -5,3 +5,5 @@
 #A schedule planner work for planning your schedule according to person to person accordingly they can plan our schedule of our perspectives and personal uses we can changed schedule planner
 <br>
 #In this schedule planner we create a rainbow background using css and color background button and done style using  css 
+<br>
+#In this html used to create a body and structure of the web of our schedule planner
