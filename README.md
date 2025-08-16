@@ -7,3 +7,5 @@
 #In this schedule planner we create a rainbow background using css and color background button and done style using  css 
 <br>
 #In this html used to create a body and structure of the web of our schedule planner
+<br>
+#In this web we also used javascript to perform all the task in sequence and properly the function of the schedule planner
