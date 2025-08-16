@@ -1,1 +1,3 @@
 #we create a schedule planner web for plan our daily schedule to maximize the utlization of the time in a mannerised way we can plan our according its save lots of time to think what we do next and always remembered our schedule date
+<br>
+#In this web we are used technology like html, css and javascript in the html code for design and function 
