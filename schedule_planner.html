@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Real-Time Schedule App</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(45deg, red, orange, yellow, green, cyan, blue, violet);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 2.5rem;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+    }
+
+    .container {
+      background: rgba(0,0,0,0.5);
+      padding: 20px;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 90%;
+      margin: 20px auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+
+    .input-section input, .input-section button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      box-sizing: border-box;
+    }
+
+    .input-section input[type="text"] {
+      background: #fff;
+      color: #000;
+    }
+
+    .input-section input[type="datetime-local"] {
+      background: #f0f0f0;
+      color: #000;
+    }
+
+    .btn-add {
+      background: #00e676;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .schedule-item {
+      background: rgba(255, 255, 255, 0.1);
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .schedule-item .info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task-text {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .task-time {
+      font-size: 14px;
+      color: #ddd;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .buttons button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-edit {
+      background: #29b6f6;
+      color: black;
+    }
+
+    .btn-delete {
+      background: #ef5350;
+      color: black;
+    }
+
+    .btn-submit {
+      background: #66bb6a;
+      color: black;
+    }
+
+    .edit-fields input {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 6px;
+      border: none;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Schedule Planner</h1>
+
+  <div class="container">
+    <div class="input-section">
+      <input type="text" id="taskInput" placeholder="Enter task here...">
+      <input type="datetime-local" id="datetimeInput">
+      <button class="btn-add" onclick="addTask()">Add Task</button>
+    </div>
+
+    <div id="scheduleList"></div>
+  </div>
+
+  <script>
+    const tasks = [];
+
+    function addTask() {
+      const text = document.getElementById("taskInput").value.trim();
+      const time = document.getElementById("datetimeInput").value;
+
+      if (!text || !time) return alert("Please enter task and select date & time.");
+
+      tasks.push({ text, time, editing: false });
+      document.getElementById("taskInput").value = '';
+      document.getElementById("datetimeInput").value = '';
+      renderTasks();
+    }
+
+    function editTask(index) {
+      tasks[index].editing = true;
+      renderTasks();
+    }
+
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      renderTasks();
+    }
+
+    function cancelEdit(index) {
+      tasks[index].editing = false;
+      renderTasks();
+    }
+
+    function submitEdit(index) {
+      const newText = document.getElementById(`editText${index}`).value.trim();
+      const newTime = document.getElementById(`editTime${index}`).value;
+
+      if (!newText || !newTime) return alert("Please fill both fields.");
+      tasks[index].text = newText;
+      tasks[index].time = newTime;
+      tasks[index].editing = false;
+      renderTasks();
+    }
+
+    function renderTasks() {
+      const list = document.getElementById("scheduleList");
+      list.innerHTML = "";
+
+      tasks
+        .slice()
+        .sort((a, b) => new Date(a.time) - new Date(b.time))
+        .forEach((task, index) => {
+          const item = document.createElement("div");
+          item.className = "schedule-item";
+
+          if (task.editing) {
+            item.innerHTML = `
+              <div class="edit-fields">
+                <input type="text" id="editText${index}" value="${task.text}" />
+                <input type="datetime-local" id="editTime${index}" value="${task.time}" />
+                <div class="buttons">
+                  <button class="btn-submit" onclick="submitEdit(${index})">Submit</button>
+                  <button class="btn-delete" onclick="cancelEdit(${index})">Cancel</button>
+                </div>
+              </div>
+            `;
+          } else {
+            item.innerHTML = `
+              <div class="info">
+                <div>
+                  <div class="task-text">${task.text}</div>
+                  <div class="task-time">${new Date(task.time).toLocaleString()}</div>
+                </div>
+                <div class="buttons">
+                  <button class="btn-edit" onclick="editTask(${index})">Edit</button>
+                  <button class="btn-delete" onclick="deleteTask(${index})">Delete</button>
+                </div>
+              </div>
+            `;
+          }
+
+          list.appendChild(item);
+        });
+    }
+  </script>
+
+</body>
+</html>
