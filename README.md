@@ -3,3 +3,5 @@
 #In this web we are used technology like html, css and javascript in the html code for design and function 
 <br>
 #A schedule planner work for planning your schedule according to person to person accordingly they can plan our schedule of our perspectives and personal uses we can changed schedule planner
+<br>
+#In this schedule planner we create a rainbow background using css and color background button and done style using  css 
